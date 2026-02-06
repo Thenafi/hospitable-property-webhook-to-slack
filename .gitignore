@@ -1,0 +1,35 @@
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Logs
+webhook.log
+*.log
+logs/
+
+# Dependencies
+node_modules/
+vendor/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Backups
+*.bak
+*.backup
+*~
+
+# Test results
+test-results/
+coverage/
+Hospitable_Monitoring_Properties (2).json
