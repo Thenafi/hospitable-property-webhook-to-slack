@@ -63,6 +63,17 @@
     </IfModule>
 </Files>
 
+# Protect Webhook History (Contains PII)
+<Files "webhook_history.json">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</Files>
+
 # Allow PHP files to be executed
 <FilesMatch "\.php$">
     <IfModule mod_authz_core.c>

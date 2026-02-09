@@ -6,7 +6,7 @@
 const http = require('http');
 const https = require('https');
 
-const WEBHOOK_URL = 'https://your-domain.com/webhook-path/'; // ⚠️ Replace with your actual webhook URL
+const WEBHOOK_URL = 'https://hospitable-new-property-message.castlehost.co/'; // ⚠️ Replace with your actual webhook URL
 
 /**
  * Send test webhook

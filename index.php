@@ -45,6 +45,8 @@ function handleHospitableWebhook()
         return;
     }
 
+    logRecentWebhook($json);
+
     /**
      * Support BOTH formats:
      * 1) { body: { action, data } }
@@ -226,6 +228,47 @@ function logError($message)
     if (!file_exists($file) || filesize($file) < 10240) {
         error_log(date('Y-m-d H:i:s') . ' | ' . $message . PHP_EOL, 3, $file);
     }
+}
+
+
+
+// --------------------------------------------------
+// Log Rotation (2 Days)
+// --------------------------------------------------
+function logRecentWebhook($data)
+{
+    $file = __DIR__ . '/webhook_history.json';
+    $retention = 48 * 3600; // 2 days
+    $now = time();
+
+    // 1. Read existing
+    $entries = [];
+    if (file_exists($file)) {
+        $content = @file_get_contents($file);
+        $decoded = json_decode($content, true);
+        if (is_array($decoded)) {
+            $entries = $decoded;
+        }
+    }
+
+    // 2. Append new
+    $entries[] = [
+        'received_at' => date('c'),
+        'timestamp'   => $now,
+        'payload'     => $data
+    ];
+
+    // 3. Filter old (< 2 days)
+    $entries = array_filter($entries, function ($entry) use ($now, $retention) {
+        // Keep if timestamp is within retention window
+        return isset($entry['timestamp']) && ($entry['timestamp'] > ($now - $retention));
+    });
+
+    // Re-index
+    $entries = array_values($entries);
+
+    // 4. Save
+    file_put_contents($file, json_encode($entries, JSON_PRETTY_PRINT), LOCK_EX);
 }
 
 
